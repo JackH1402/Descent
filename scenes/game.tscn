@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://xmj8ygyqxl8"]
+[gd_scene load_steps=10 format=3 uid="uid://xmj8ygyqxl8"]
 
 [ext_resource type="Texture2D" uid="uid://67jhfpncoevg" path="res://assets/game background.png" id="1_be6y1"]
 [ext_resource type="PackedScene" uid="uid://cexbl7ifddksl" path="res://scenes/player.tscn" id="1_pbfup"]
 [ext_resource type="Texture2D" uid="uid://c6ngbo26mhu51" path="res://assets/pixil-frame-0.png" id="1_u0yd7"]
+[ext_resource type="PackedScene" uid="uid://dsq0ycjn68gui" path="res://scenes/animatable_body_2d.tscn" id="4_0t5r8"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3dghm"]
 texture = ExtResource("1_u0yd7")
@@ -271,6 +272,43 @@ texture = ExtResource("1_u0yd7")
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_3dghm")
 
+[sub_resource type="Animation" id="Animation_d4jym"]
+resource_name = "walking"
+length = 5.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimationPlayer:root_node")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [NodePath(".."), NodePath("..")]
+}
+
+[sub_resource type="Animation" id="Animation_h562k"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimationPlayer:root_node")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [NodePath("..")]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mawfv"]
+_data = {
+"RESET": SubResource("Animation_h562k"),
+"walking": SubResource("Animation_d4jym")
+}
+
 [node name="Game" type="Node2D"]
 position = Vector2(21, 25)
 
@@ -286,9 +324,18 @@ layer_0/tile_data = PackedInt32Array(0, 0, 0, 65536, 0, 1, 131072, 0, 2, 196608,
 layer_1/tile_data = PackedInt32Array()
 
 [node name="Player" parent="." instance=ExtResource("1_pbfup")]
-position = Vector2(19, 23)
+position = Vector2(18, 24)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 position = Vector2(9, -5)
 zoom = Vector2(16, 16)
+limit_bottom = 149
 position_smoothing_enabled = true
+
+[node name="AnimatableBody2D2" parent="." instance=ExtResource("4_0t5r8")]
+position = Vector2(21, 41)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatableBody2D2"]
+libraries = {
+"": SubResource("AnimationLibrary_mawfv")
+}
